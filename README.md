@@ -36,6 +36,6 @@
 ## Ссылки и дополнительные сведения
 
 - Документация проекта:
-  [fpmi-tpmp2026/tpmp-gr12b-lab4-namealteam](https://github.com/fpmi-tpmp2026/tpmp-gr12b-lab4-namealteam)
+  [GitHub Wiki](https://github.com/fpmi-tpmp2026/tpmp-gr12b-lab4-namealteam/wiki/Home)
 - SQL-схема и пример данных:
   [docs/schema.sql](./docs/schema.sql)
