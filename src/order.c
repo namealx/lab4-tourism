@@ -17,7 +17,7 @@ int order_create_table(Database *db) {
         "status TEXT DEFAULT 'pending',"
         "FOREIGN KEY (client_id) REFERENCES users(id),"
         "FOREIGN KEY (bus_id) REFERENCES buses(id),"
-        "FOREIGN KEY (route_id) REFERENCES tour_routes(id)"
+        "FOREIGN KEY (route_id) REFERENCES routes(id)"
         ");";
     
     return db_execute(db, sql);

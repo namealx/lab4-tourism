@@ -14,6 +14,9 @@ Database* db_open(const char *filename) {
         free(db);
         return NULL;
     }
+
+    // Включаем контроль внешних ключей для целостности туристического бюро.
+    sqlite3_exec(db->conn, "PRAGMA foreign_keys = ON;", NULL, NULL, NULL);
     return db;
 }
 

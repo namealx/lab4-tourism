@@ -6,6 +6,10 @@
 typedef struct {
     int id;
     char bus_number[20];
+    char name[100];
+    int total_mileage;
+    unsigned char *photo;
+    int photo_size;
     char model[50];
     int capacity;
     char status[20];
@@ -21,11 +25,13 @@ int bus_get_all(Database *db, Bus **buses, int *count);
 int bus_get_available(Database *db, Bus **buses, int *count);
 int bus_update(Database *db, Bus *bus);
 int bus_delete(Database *db, int id);
+int bus_save_photo_to_file(Database *db, int id, const char *filename);
 
 // Изменение статуса
 int bus_set_status(Database *db, int id, const char *status);
 
 // Освобождение памяти
+void bus_free(Bus *bus);
 void bus_free_list(Bus *buses);
 
 #endif

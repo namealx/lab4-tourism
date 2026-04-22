@@ -5,9 +5,11 @@
 
 typedef struct {
     int id;
+    char route_name[100];
     char name[100];
     char start_point[100];
     char end_point[100];
+    int length;
     int distance;
     double price_per_ticket;
 } TourRoute;

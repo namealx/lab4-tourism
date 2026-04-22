@@ -2,8 +2,12 @@
 #include "route.h"
 #include "order.h"
 #include "bus.h"
+#include "crew.h"
+#include "trip.h"
+#include "reports.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void clear_screen() {
     printf("\033[2J\033[1;1H");
@@ -13,6 +17,65 @@ void press_enter() {
     printf("\nНажмите Enter для продолжения...");
     while (getchar() != '\n');
     getchar();
+}
+
+static void show_reports_menu(Database *db) {
+    int choice;
+    do {
+        clear_screen();
+        printf("=== Отчеты и выборки ===\n");
+        printf("1. Рейсы автобуса за период\n");
+        printf("2. Статистика автобуса за период\n");
+        printf("3. Рассчитать зарплату экипажей\n");
+        printf("4. Показать зарплату экипажей за период\n");
+        printf("5. Самый дорогой маршрут\n");
+        printf("6. Автобус с наибольшим пробегом\n");
+        printf("0. Назад\n");
+        printf("Выберите действие: ");
+        scanf("%d", &choice);
+
+        if (choice == 1 || choice == 2) {
+            int bus_id;
+            char start_date[11], end_date[11];
+            printf("Введите ID автобуса: ");
+            scanf("%d", &bus_id);
+            printf("Начальная дата (YYYY-MM-DD): ");
+            scanf("%10s", start_date);
+            printf("Конечная дата (YYYY-MM-DD): ");
+            scanf("%10s", end_date);
+            if (choice == 1) {
+                report_bus_trips_period(db, bus_id, start_date, end_date);
+            } else {
+                report_bus_summary(db, bus_id, start_date, end_date);
+            }
+            press_enter();
+        } else if (choice == 3 || choice == 4) {
+            char start_date[11], end_date[11];
+            double percent = 0.0;
+            printf("Начальная дата (YYYY-MM-DD): ");
+            scanf("%10s", start_date);
+            printf("Конечная дата (YYYY-MM-DD): ");
+            scanf("%10s", end_date);
+            if (choice == 3) {
+                printf("Процент начисления: ");
+                scanf("%lf", &percent);
+                if (calculateCrewSalary(db, start_date, end_date, percent) == 0) {
+                    printf("Зарплата экипажей рассчитана.\n");
+                } else {
+                    printf("Ошибка расчета зарплаты.\n");
+                }
+            } else {
+                report_crew_salary_period(db, start_date, end_date);
+            }
+            press_enter();
+        } else if (choice == 5) {
+            report_most_expensive_route(db);
+            press_enter();
+        } else if (choice == 6) {
+            report_bus_with_max_mileage(db);
+            press_enter();
+        }
+    } while (choice != 0);
 }
 
 static void display_routes(Database *db) {
@@ -89,6 +152,7 @@ static void book_tour(Database *db, int client_id) {
 
 void show_main_menu(Database *db) {
     int choice;
+    int failed_attempts = 0;
     
     do {
         clear_screen();
@@ -100,15 +164,21 @@ void show_main_menu(Database *db) {
         scanf("%d", &choice);
         
         if (choice == 1) {
-            char username[50], password[50];
+            char login[50], password[50];
+            if (failed_attempts >= 3) {
+                printf("Доступ к входу заблокирован после 3 неудачных попыток.\n");
+                press_enter();
+                continue;
+            }
             printf("Логин: ");
-            scanf("%s", username);
+            scanf("%49s", login);
             printf("Пароль: ");
-            scanf("%s", password);
+            scanf("%49s", password);
             
-            User *user = auth_login(db, username, password);
+            User *user = auth_login(db, login, password);
             if (user) {
                 printf("Добро пожаловать, %s!\n", user->full_name);
+                failed_attempts = 0;
                 press_enter();
                 
                 if (auth_is_admin(user)) {
@@ -121,18 +191,19 @@ void show_main_menu(Database *db) {
                 auth_logout(user);
             } else {
                 printf("Неверный логин или пароль\n");
+                failed_attempts++;
                 press_enter();
             }
         } else if (choice == 2) {
-            char username[50], password[50], full_name[100];
+            char login[50], password[50], full_name[100];
             printf("Логин: ");
-            scanf("%s", username);
+            scanf("%49s", login);
             printf("Пароль: ");
-            scanf("%s", password);
+            scanf("%49s", password);
             printf("ФИО: ");
             scanf(" %[^\n]", full_name);
             
-            if (auth_register(db, username, password, full_name, "client") == 0) {
+            if (auth_register(db, login, password, full_name, "customer") == 0) {
                 printf("Регистрация успешна!\n");
             } else {
                 printf("Ошибка регистрации\n");
@@ -184,6 +255,7 @@ void show_admin_menu(Database *db, User *user) {
         printf("1. Управление автобусами\n");
         printf("2. Управление маршрутами\n");
         printf("3. Все заказы\n");
+        printf("4. Отчеты и выборки\n");
         printf("0. Выход\n");
         printf("Выберите действие: ");
         scanf("%d", &choice);
@@ -206,6 +278,8 @@ void show_admin_menu(Database *db, User *user) {
                 order_free_list(orders);
             }
             press_enter();
+        } else if (choice == 4) {
+            show_reports_menu(db);
         }
     } while (choice != 0);
 }
@@ -218,6 +292,7 @@ void show_manager_menu(Database *db, User *user) {
         printf("1. Управление маршрутами\n");
         printf("2. Подтверждение заказов\n");
         printf("3. Все заказы\n");
+        printf("4. Отчеты и выборки\n");
         printf("0. Выход\n");
         printf("Выберите действие: ");
         scanf("%d", &choice);
@@ -256,6 +331,8 @@ void show_manager_menu(Database *db, User *user) {
                 order_free_list(orders);
             }
             press_enter();
+        } else if (choice == 4) {
+            show_reports_menu(db);
         }
     } while (choice != 0);
 }
