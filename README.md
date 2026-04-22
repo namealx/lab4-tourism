@@ -29,8 +29,9 @@
 - `make clean` — очистка артефактов сборки.
 
 ## Авторы
-
+- Юранов Никита - [namealx](https://github.com/namealx)
 - Насенник Иван — [IvanNas-cmd](https://github.com/IvanNas-cmd)
+  
 
 ## Ссылки и дополнительные сведения
 
