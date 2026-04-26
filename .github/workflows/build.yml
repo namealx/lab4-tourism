@@ -1,0 +1,29 @@
+name: C CI
+
+on:
+  push:
+    branches: [ "main", "dev", "feature/**" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install SQLite3
+      run: sudo apt-get update && sudo apt-get install -y sqlite3 libsqlite3-dev
+    
+    - name: Create directories
+      run: mkdir -p build bin
+    
+    - name: Compile
+      run: make
+    
+    - name: Run tests (make check)
+      run: make check
+    
+    - name: Run application (help test)
+      run: ./bin/tourism_app --help
