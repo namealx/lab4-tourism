@@ -1,7 +1,26 @@
+# Скомпилированные файлы
 bin/
 build/
+*.o
+*.exe
+*.out
+
+# Файлы IDE
+.vscode/
+.idea/
+*.swp
+
+# Файлы macOS
+.DS_Store
+
+# Файлы БД
+*.db
+*.db-wal
+*.db-shm
+
+# Отчеты покрытия
 *.gcda
 *.gcno
 *.gcov
-tourism.db
-test.db
+coverage.xml
+coverage.html
