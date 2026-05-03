@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <title>Tourism Bureau | Lab 4</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+
+  <main class="page">
+    <section class="hero card">
+      <p class="eyebrow">Lab 4 / Tourism Bureau</p>
+      <h1>Console travel management with SQLite, tests, coverage, and docs.</h1>
+      <p class="lead">
+        The application manages buses, crew, routes, trips, orders, and reporting.
+        GitHub Actions builds the project, uploads coverage to Codecov, and publishes
+        this page through GitHub Pages.
+      </p>
+
+      <div class="actions">
+        <a class="button button-primary" href="https://github.com/namealx/lab4-tourism">Source code</a>
+        <a class="button" href="https://codecov.io/gh/namealx/lab4-tourism">Codecov</a>
+        <a class="button" href="https://github.com/fpmi-tpmp2026/tpmp-gr12b-lab4-namealteam/wiki/Home">Wiki</a>
+      </div>
+
+      <div class="chips" aria-label="Project highlights">
+        <span class="chip">C + SQLite</span>
+        <span class="chip">Role-based menus</span>
+        <span class="chip">SELECT reports</span>
+        <span class="chip">Unit tests</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <p class="section-label">What is included</p>
+        <h2>Core flows that already work</h2>
+        <ul class="feature-list">
+          <li>Authentication with seeded roles for admin, manager, crew, and client.</li>
+          <li>CRUD for buses, crew, routes, and trips backed by SQLite tables.</li>
+          <li>Reporting queries for trips, salary calculations, routes, and mileage.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <p class="section-label">Local setup</p>
+        <h2>How to run it</h2>
+        <pre><code>make
+make check
+make coverage
+./bin/tourism_app</code></pre>
+        <p class="fineprint">Coverage builds into a separate directory, so the normal build stays clean.</p>
+      </article>
+
+      <article class="card">
+        <p class="section-label">Automation</p>
+        <h2>What GitHub Actions does</h2>
+        <ul class="feature-list">
+          <li>Builds and tests on Ubuntu and macOS.</li>
+          <li>Generates coverage and uploads it to Codecov with OIDC.</li>
+          <li>Deploys this static site to GitHub Pages from the main branch.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
