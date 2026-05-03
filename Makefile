@@ -23,6 +23,24 @@ all: directories $(TARGET)
 directories:
 	mkdir -p $(BUILDDIR) $(BINDIR)
 
+# Поиск всех тестов (все .c файлы в папке tests/)
+TEST_SOURCES = $(wildcard $(TESTDIR)/*.c)
+TEST_OBJECTS = $(patsubst $(TESTDIR)/%.c, $(BUILDDIR)/%.o, $(TEST_SOURCES))
+
+# Исключаем main.c из тестов (если нужно тестировать без main)
+SOURCES_WITHOUT_MAIN = $(filter-out $(SRCDIR)/main.c, $(SOURCES))
+OBJECTS_WITHOUT_MAIN = $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(SOURCES_WITHOUT_MAIN))
+
+TEST_TARGET = $(BINDIR)/tourism_tests
+
+# Цель по умолчанию
+all: directories $(TARGET)
+
+# Создание директорий
+directories:
+	mkdir -p $(BUILDDIR) $(BINDIR)
+
+# Сборка основного приложения
 $(TARGET): $(OBJECTS)
 	$(CC) $^ -o $@ $(LDFLAGS)
 
